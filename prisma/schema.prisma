@@ -1,0 +1,58 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("DB_URI")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum UserRole {
+  ADMIN
+  CLIENT
+}
+
+model User {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  email    String  @unique
+  password String?
+  name     String?
+
+  emailVerified DateTime?
+
+  // stripeCustomerId String?
+
+  role UserRole @default(CLIENT)
+
+  access Category[]
+
+  sessions Session[]
+
+  MagicLink MagicLink[]
+}
+
+model MagicLink {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  token     String   @unique
+  expiresAt DateTime
+
+  userId String @db.ObjectId
+  user   User   @relation(references: [id], fields: [userId], onDelete: Cascade)
+}
+
+model Session {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  token     String   @unique
+  expiresAt DateTime
+
+  userId String @db.ObjectId
+  user   User   @relation(references: [id], fields: [userId], onDelete: Cascade)
+}
+
+model Category {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  userId String @db.ObjectId
+  user   User   @relation(references: [id], fields: [userId], onDelete: Cascade)
+}
