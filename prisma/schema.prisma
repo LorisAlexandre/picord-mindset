@@ -65,7 +65,8 @@ model Session {
 model Category {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  isActive DateTime?
+  title    String
+  isPublic DateTime?
 
   userId String @db.ObjectId
   user   User   @relation(references: [id], fields: [userId], onDelete: Cascade)
