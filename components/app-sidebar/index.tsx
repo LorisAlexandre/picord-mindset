@@ -1,7 +1,19 @@
-import { Sidebar, SidebarContent } from "@/components/shadcn/ui";
+import {
+  Dialog,
+  DialogTrigger,
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupAction,
+  SidebarGroupLabel,
+} from "@/components/shadcn/ui";
 import { HTMLAttributes, Suspense } from "react";
-import { CategoryGroup } from "./category-group";
-import { CategoryGroupSkeleton } from "./category-group-skeleton";
+import {
+  CategoryGroupSkeleton,
+  CategoryGroup,
+  CategoryDialogAction,
+} from "./category";
+import { Plus } from "lucide-react";
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
   side?: "left" | "right";
@@ -13,7 +25,18 @@ export const AppSidebar = ({ ...props }: Props) => {
     <Sidebar {...props}>
       <SidebarContent>
         <Suspense fallback={<CategoryGroupSkeleton />}>
-          <CategoryGroup />
+          <SidebarGroup>
+            <SidebarGroupLabel>Catégories</SidebarGroupLabel>
+            <Dialog>
+              <DialogTrigger asChild>
+                <SidebarGroupAction title="Add Project">
+                  <Plus /> <span className="sr-only">Add Project</span>
+                </SidebarGroupAction>
+              </DialogTrigger>
+              <CategoryDialogAction />
+            </Dialog>
+            <CategoryGroup />
+          </SidebarGroup>
         </Suspense>
         {/* <SidebarSeparator /> */}
       </SidebarContent>
