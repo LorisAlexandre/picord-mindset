@@ -29,7 +29,19 @@ model User {
 
   sessions Session[]
 
-  MagicLink MagicLink[]
+  magicLink MagicLink[]
+
+  form Form[]
+
+  question Question[]
+
+  answerOption AnswerOption[]
+
+  response Response[]
+
+  responseDetail ResponseDetail[]
+
+  content Content[]
 }
 
 model MagicLink {
@@ -53,6 +65,115 @@ model Session {
 model Category {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
+  isActive DateTime?
+
   userId String @db.ObjectId
   user   User   @relation(references: [id], fields: [userId], onDelete: Cascade)
+
+  content Content[]
+}
+
+model Form {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  title       String
+  description String?
+  userId      String  @db.ObjectId
+  contentId   String? @db.ObjectId
+
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  question Question[]
+
+  response Response[]
+}
+
+model Question {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  qText String
+  qType String
+
+  formId String @db.ObjectId
+  form   Form   @relation(references: [id], fields: [formId], onDelete: Cascade)
+
+  userId String @db.ObjectId
+  user   User   @relation(references: [id], fields: [userId], onDelete: Cascade)
+
+  answerOption AnswerOption[]
+
+  responseDetail ResponseDetail[]
+}
+
+model AnswerOption {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  title  String
+  imgUrl String?
+
+  questionId String   @db.ObjectId
+  question   Question @relation(references: [id], fields: [questionId], onDelete: Cascade)
+
+  userId String @db.ObjectId
+  user   User   @relation(references: [id], fields: [userId], onDelete: Cascade)
+
+  responseDetail ResponseDetail[]
+}
+
+model Response {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  submittedAt DateTime @default(now())
+
+  formId String @db.ObjectId
+  form   Form   @relation(references: [id], fields: [formId], onDelete: Cascade)
+
+  userId String @db.ObjectId
+  user   User   @relation(references: [id], fields: [userId], onDelete: Cascade)
+
+  responseDetail ResponseDetail[]
+}
+
+model ResponseDetail {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  answerText        String?
+  answerNumber      Int?
+  selectedOptionIds String[] @db.ObjectId
+
+  answerOption AnswerOption @relation(references: [id], fields: [selectedOptionIds], onDelete: Cascade)
+
+  responseId String   @db.ObjectId
+  response   Response @relation(references: [id], fields: [responseId], onDelete: Cascade)
+
+  questionId String   @db.ObjectId
+  question   Question @relation(references: [id], fields: [questionId], onDelete: Cascade)
+
+  userId String @db.ObjectId
+  user   User   @relation(references: [id], fields: [userId], onDelete: Cascade)
+}
+
+model Content {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  properties ContentProperties
+  tag        String?
+
+  categoryId String   @db.ObjectId
+  category   Category @relation(references: [id], fields: [categoryId], onDelete: Cascade)
+
+  contentIds String[] @unique @db.ObjectId
+  content    Content  @relation("ChildrenContent", fields: [contentIds], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  parentId String?  @db.ObjectId
+  parent   Content? @relation("ChildrenContent")
+
+  userId String @db.ObjectId
+  user   User   @relation(references: [id], fields: [userId], onDelete: Cascade)
+}
+
+type ContentProperties {
+  title String
 }
