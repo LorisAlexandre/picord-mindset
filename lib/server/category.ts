@@ -1,10 +1,10 @@
 "server-only";
 
 import { Category } from "@prisma/client";
-import { cache } from "react";
 import { redirect } from "next/navigation";
 import { prisma } from "./db";
 import { getCurrentSession } from "./session";
+import { cache } from "react";
 
 export const getCategories = cache(async (): Promise<Category[]> => {
   const categories = await prisma.category.findMany();

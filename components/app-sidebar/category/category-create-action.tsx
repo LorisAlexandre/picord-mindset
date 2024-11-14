@@ -22,7 +22,7 @@ const initialState: {
 } = {
   message: "",
 };
-export const CategoryDialogAction = () => {
+export const CategoryCreateAction = () => {
   const [state, action] = useActionState(createCategoryAction, initialState);
   const submitBtnRef = useRef<HTMLButtonElement | null>(null);
 

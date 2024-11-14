@@ -11,7 +11,7 @@ import { HTMLAttributes, Suspense } from "react";
 import {
   CategoryGroupSkeleton,
   CategoryGroup,
-  CategoryDialogAction,
+  CategoryCreateAction,
 } from "./category";
 import { Plus } from "lucide-react";
 
@@ -33,7 +33,7 @@ export const AppSidebar = ({ ...props }: Props) => {
                   <Plus /> <span className="sr-only">Add Project</span>
                 </SidebarGroupAction>
               </DialogTrigger>
-              <CategoryDialogAction />
+              <CategoryCreateAction />
             </Dialog>
             <CategoryGroup />
           </SidebarGroup>
