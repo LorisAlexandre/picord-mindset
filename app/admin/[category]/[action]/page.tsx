@@ -1,4 +1,7 @@
-import { CategoryDeleteAction } from "@/components/app-sidebar/category";
+import {
+  CategoryDeleteAction,
+  CategoryEditAction,
+} from "@/components/app-sidebar/category";
 import { getCategoryByTitle } from "@/lib/server/category";
 import { notFound } from "next/navigation";
 import { ReactNode } from "react";
@@ -23,6 +26,8 @@ export default async function CategoryActionPage(props: Props) {
         return <CategoryDeleteAction id={category.id} />;
         break;
 
+      case "edit":
+        return <CategoryEditAction category={category} />;
       default:
         return null;
         break;

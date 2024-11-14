@@ -3,6 +3,7 @@
 import { deleteCategoryAction } from "@/app/admin/[category]/actions";
 import { Input, Label } from "@/components/shadcn/ui";
 import { SubmitBtn } from "@/components/submit-btn";
+import { cn } from "@/lib/utils";
 import { useParams } from "next/navigation";
 import { useActionState, useRef } from "react";
 
@@ -44,6 +45,11 @@ export const CategoryDeleteAction = ({ id }: { id: string }) => {
               submitRef.current?.click();
             }
           }}
+          className={cn(
+            !!state.fieldErrors &&
+              !!state.fieldErrors["title"] &&
+              "invalid:ring-1 invalid:ring-red-500"
+          )}
           placeholder={(category as string) ?? ""}
         />
         {!!state.fieldErrors && !!state.fieldErrors["title"] && (
@@ -51,12 +57,14 @@ export const CategoryDeleteAction = ({ id }: { id: string }) => {
         )}
       </div>
 
-      <SubmitBtn ref={submitRef} variant={"destructive"}>
-        Supprimer {category}
-      </SubmitBtn>
-      {!!state.message && (
-        <p className="text-sm text-red-500">* {state.message}</p>
-      )}
+      <div>
+        <SubmitBtn ref={submitRef} variant={"destructive"}>
+          Supprimer {category}
+        </SubmitBtn>
+        {!!state.message && (
+          <p className="text-sm text-red-500">* {state.message}</p>
+        )}
+      </div>
     </form>
   );
 };

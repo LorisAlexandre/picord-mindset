@@ -66,3 +66,23 @@ export async function deleteCategory(id: string): Promise<void> {
     },
   });
 }
+
+export async function editCategory(
+  id: string,
+  data: Pick<Category, "title" | "isPublic">
+): Promise<Category> {
+  const { user } = await getCurrentSession();
+
+  if (user.role !== "ADMIN") {
+    return redirect("/not-authorized");
+  }
+
+  const updatedCategory = await prisma.category.update({
+    where: {
+      id,
+    },
+    data,
+  });
+
+  return updatedCategory;
+}

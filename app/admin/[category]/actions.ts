@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import {
   createCategory,
   deleteCategory,
+  editCategory,
   getCategoryById,
 } from "@/lib/server/category";
 
@@ -100,6 +101,55 @@ export async function deleteCategoryAction(
   await deleteCategory(id);
 
   return redirect("/admin");
+}
+
+const editCategorySchema = z.object({
+  title: z
+    .string({ message: "Le champ doit être renseigné" })
+    .min(1, "Le champ est obligatoire")
+    .max(64, "Le champ est trop long"),
+  isPublic: z.boolean().default(false),
+  id: z
+    .string({ message: "Le champ doit être renseigné" })
+    .min(1, "Le champ est obligatoire"),
+});
+export async function editCategoryAction(
+  _prevState: FormState,
+  formData: FormData
+): Promise<FormState> {
+  const validatedFields = editCategorySchema.safeParse({
+    title: formData.get("title"),
+    isPublic: formData.get("isPublic") === "true",
+    id: formData.get("id"),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      fieldErrors: validatedFields.error.flatten().fieldErrors,
+      message: `Vérifiez le(s) champ(s) ${Object.keys(
+        validatedFields.error.flatten().fieldErrors
+      ).map((e) => {
+        switch (e) {
+          case "title":
+            return "titre";
+          case "isPublic":
+            return "visibilité";
+          default:
+            return e;
+        }
+      })}`,
+    };
+  }
+
+  const { id, ...data } = validatedFields.data;
+
+  await editCategory(id, {
+    ...data,
+    isPublic: data.isPublic ? new Date(Date.now()) : null,
+  });
+
+  revalidatePath("/admin");
+  return redirect(`/admin/${data.title}/edit`);
 }
 
 interface FormState {
