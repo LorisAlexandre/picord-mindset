@@ -3,7 +3,11 @@
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { createCategory } from "@/lib/server/category";
+import {
+  createCategory,
+  deleteCategory,
+  getCategoryById,
+} from "@/lib/server/category";
 
 const createCategorySchema = z.object({
   title: z
@@ -45,6 +49,57 @@ export async function createCategoryAction(
   revalidatePath("/admin");
 
   return redirect(`/admin/${newCategory.title}`);
+}
+
+const deleteCategorySchema = z.object({
+  title: z
+    .string({ message: "Le champ doit être renseigné" })
+    .min(1, "Le champ est obligatoire")
+    .max(64, "Le champ est trop long"),
+  id: z
+    .string({ message: "Le champ doit être renseigné" })
+    .min(1, "Le champ est obligatoire"),
+});
+export async function deleteCategoryAction(
+  _prevState: FormState,
+  formData: FormData
+): Promise<FormState> {
+  const validatedFields = deleteCategorySchema.safeParse({
+    title: formData.get("title"),
+    id: formData.get("id"),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      fieldErrors: validatedFields.error.flatten().fieldErrors,
+      message: `Vérifiez le(s) champ(s) ${Object.keys(
+        validatedFields.error.flatten().fieldErrors
+      )
+        .map((e) => {
+          switch (e) {
+            case "title":
+              return "titre";
+            default:
+              return e;
+          }
+        })
+        .join(" et ")}`,
+    };
+  }
+
+  const { title, id } = validatedFields.data;
+
+  const category = await getCategoryById(id);
+
+  if (title !== category?.title) {
+    return {
+      message: "Le titre ne correspond pas",
+    };
+  }
+
+  await deleteCategory(id);
+
+  return redirect("/admin");
 }
 
 interface FormState {

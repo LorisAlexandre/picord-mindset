@@ -12,6 +12,30 @@ export const getCategories = cache(async (): Promise<Category[]> => {
   return categories;
 });
 
+export const getCategoryById = cache(
+  async (id: string): Promise<Category | null> => {
+    const category = await prisma.category.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    return category;
+  }
+);
+
+export const getCategoryByTitle = cache(
+  async (title: string): Promise<Category | null> => {
+    const category = await prisma.category.findFirst({
+      where: {
+        title,
+      },
+    });
+
+    return category;
+  }
+);
+
 export async function createCategory(title: string): Promise<Category> {
   const { user } = await getCurrentSession();
 
@@ -27,4 +51,18 @@ export async function createCategory(title: string): Promise<Category> {
   });
 
   return newCategory;
+}
+
+export async function deleteCategory(id: string): Promise<void> {
+  const { user } = await getCurrentSession();
+
+  if (user.role !== "ADMIN") {
+    return redirect("/not-authorized");
+  }
+
+  await prisma.category.delete({
+    where: {
+      id,
+    },
+  });
 }
