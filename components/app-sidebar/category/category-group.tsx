@@ -23,7 +23,7 @@ export const CategoryGroup = async () => {
         {categories.map((cat) => (
           <SidebarMenuItem key={cat.id}>
             <SidebarMenuButton asChild>
-              <Link href={`/admin/${cat.title}`}>
+              <Link prefetch={true} href={`/admin/categories/${cat.title}`}>
                 {/* <item.icon /> */}
                 <span>{cat.title}</span>
               </Link>
@@ -40,10 +40,20 @@ export const CategoryGroup = async () => {
                 className="space-y-1"
               >
                 <DropdownMenuItem>
-                  <Link href={`/admin/${cat.title}/edit`}>Modifier</Link>
+                  <Link
+                    prefetch={true}
+                    href={`/admin/categories/${cat.title}/actions/edit`}
+                  >
+                    Modifier
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Link href={`/admin/${cat.title}/delete`}>Supprimer</Link>
+                  <Link
+                    prefetch={true}
+                    href={`/admin/categories/${cat.title}/actions/delete`}
+                  >
+                    Supprimer
+                  </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

@@ -1,6 +1,6 @@
 "use client";
 
-import { createCategoryAction } from "@/app/admin/[category]/actions";
+import { createCategoryAction } from "@/app/admin/categories/actions";
 import {
   DialogContent,
   DialogDescription,

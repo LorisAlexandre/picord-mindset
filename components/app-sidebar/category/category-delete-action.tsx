@@ -1,17 +1,7 @@
 "use client";
 
-import { deleteCategoryAction } from "@/app/admin/[category]/actions";
-import {
-  Button,
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-  Input,
-  Label,
-} from "@/components/shadcn/ui";
+import { deleteCategoryAction } from "@/app/admin/categories/actions";
+import { Button, Input, Label } from "@/components/shadcn/ui";
 import { SubmitBtn } from "@/components/submit-btn";
 import { cn } from "@/lib/utils";
 import { ArrowLeft } from "lucide-react";
@@ -37,7 +27,11 @@ export const CategoryDeleteAction = ({ id }: { id: string }) => {
   return (
     <div className="flex-1 h-full pt-4 flex flex-col gap-8">
       <Button variant={"ghost"} className="px-1 py-1 h-fit w-fit" asChild>
-        <Link href={`/admin/${category}`} className="flex gap-1">
+        <Link
+          prefetch={true}
+          href={`/admin/categories/${category}`}
+          className="flex gap-1"
+        >
           <ArrowLeft />
           Retour
         </Link>
