@@ -1,16 +1,23 @@
 "server-only";
 
-import { Category } from "@prisma/client";
+import { Category, Prisma } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { prisma } from "./db";
 import { getCurrentSession } from "./session";
 import { cache } from "react";
 
-export const getCategories = cache(async (): Promise<Category[]> => {
-  const categories = await prisma.category.findMany();
+export const getCategories = cache(
+  async (include?: (keyof Prisma.CategoryInclude)[]) => {
+    const cleanInclude: { [k: string]: boolean } = {};
+    (include ?? [])?.map((k) => (cleanInclude[k] = true));
 
-  return categories;
-});
+    const categories = await prisma.category.findMany({
+      include: cleanInclude,
+    });
+
+    return categories;
+  }
+);
 
 export const getCategoryById = cache(
   async (id: string): Promise<Category | null> => {
