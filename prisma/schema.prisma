@@ -65,7 +65,7 @@ model Session {
 model Category {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  title    String
+  title    String    @unique
   isPublic DateTime?
 
   userId String @db.ObjectId

@@ -26,7 +26,7 @@ export const getCategoryById = cache(
 
 export const getCategoryByTitle = cache(
   async (title: string): Promise<Category | null> => {
-    const category = await prisma.category.findFirst({
+    const category = await prisma.category.findUnique({
       where: {
         title,
       },
