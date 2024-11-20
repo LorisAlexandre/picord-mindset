@@ -1,7 +1,12 @@
 "use server";
 
 import { getCategoryByTitle } from "@/lib/server/category";
-import { createForm, deleteForm, getFormById } from "@/lib/server/form";
+import {
+  createForm,
+  deleteForm,
+  getFormById,
+  updateForm,
+} from "@/lib/server/form";
 import { redirect, RedirectType } from "next/navigation";
 import { z } from "zod";
 
@@ -115,6 +120,87 @@ export async function deleteFormAction(
   await deleteForm(id);
 
   return redirect(`/admin/categories/${category}/forms`);
+}
+
+const answerOptionSchema = z.object({
+  title: z
+    .string({ message: "Le champ doit être renseigné" })
+    .min(1, "Le champ est obligatoire"),
+  id: z
+    .string({ message: "Le champ doit être renseigné" })
+    .min(1, "Le champ est obligatoire"),
+});
+const questionSchema = z.object({
+  qText: z
+    .string({ message: "Le champ doit être renseigné" })
+    .min(1, "Le champ est obligatoire"),
+  qType: z.enum(
+    ["text", "long-text", "number", "single-choice", "multiple-choice"],
+    {
+      message: `Vous devez choisir entre ${[
+        "texte",
+        "long-texte",
+        "nombre",
+        "choix unique",
+        "choix-multiple",
+      ].join(" ou ")}`,
+    }
+  ),
+  id: z
+    .string({ message: "Le champ doit être renseigné" })
+    .min(1, "Le champ est obligatoire"),
+  answerOption: z.array(answerOptionSchema),
+});
+const updateFormSchema = z.object({
+  id: z
+    .string({ message: "Le champ doit être renseigné" })
+    .min(1, "Le champ est obligatoire"),
+  userId: z
+    .string({ message: "Le champ doit être renseigné" })
+    .min(1, "Le champ est obligatoire"),
+  title: z
+    .string({ message: "Le champ doit être renseigné" })
+    .min(1, "Le champ est obligatoire"),
+  description: z.string().nullable(),
+  question: z.array(questionSchema).min(1, "Une question est nécessaire"),
+});
+export async function updateFormAction(
+  _prevState: FormState,
+  formData: FormData
+): Promise<FormState> {
+  const editingForm = JSON.parse(formData.get("editingForm") as string);
+
+  const validatedFields = updateFormSchema.safeParse(editingForm);
+
+  if (!validatedFields.success) {
+    const fieldErrors: {
+      [key: string]: string[] | undefined;
+    } = {};
+
+    validatedFields.error.errors.map((e) => {
+      fieldErrors[e.path.map(String).join(",")] = [
+        ...(fieldErrors[e.path.map(String).join(",")] ?? ""),
+        e.message,
+      ];
+    });
+
+    console.log(fieldErrors);
+
+    return {
+      fieldErrors,
+      message: `${Object.keys(validatedFields.error.flatten().fieldErrors).map(
+        (e) => e
+      )}`,
+    };
+  }
+
+  const form = validatedFields.data;
+
+  const [updatedForm, ...result] = await updateForm(form);
+
+  return redirect(
+    `/admin/categories/${updatedForm.category.title}/forms/${form.id}`
+  );
 }
 
 type FormState = {

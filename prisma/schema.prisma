@@ -87,21 +87,19 @@ model Form {
   categoryId String   @db.ObjectId
   category   Category @relation(fields: [categoryId], references: [id])
 
-  contentId String?  @db.ObjectId
-  content   Content? @relation(fields: [contentId], references: [id])
-
   userId String @db.ObjectId
   user   User   @relation(fields: [userId], references: [id])
 
   question Question[]
   response Response[]
+  content  Content[]
 }
 
 model Question {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   qText String
-  qType String
+  qType String @default("text")
 
   formId String @db.ObjectId
   form   Form   @relation(references: [id], fields: [formId], onDelete: Cascade)
@@ -180,7 +178,8 @@ model Content {
   userId String @db.ObjectId
   user   User   @relation(references: [id], fields: [userId], onDelete: Cascade)
 
-  form Form[]
+  formId String? @db.ObjectId
+  form   Form?   @relation(fields: [formId], references: [id])
 }
 
 type ContentProperties {

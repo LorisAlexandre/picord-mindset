@@ -85,3 +85,18 @@ export {
   DropdownMenuTrigger,
 } from "./dropdown-menu";
 export { Switch } from "./switch";
+export {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectScrollDownButton,
+  SelectScrollUpButton,
+  SelectSeparator,
+  SelectTrigger,
+  SelectValue,
+} from "./select";
+export { RadioGroup, RadioGroupItem } from "./radio-group";
+export { Checkbox } from "./checkbox";
+export { Textarea } from "./textarea";

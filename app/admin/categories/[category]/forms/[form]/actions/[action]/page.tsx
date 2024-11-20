@@ -1,9 +1,6 @@
-import {
-  CategoryDeleteAction,
-  CategoryEditAction,
-} from "@/components/app-sidebar/category";
-import { FormDeleteAction } from "@/components/form";
+import { FormDeleteAction, FormEditAction } from "@/components/form";
 import { getFormById } from "@/lib/server/form";
+import { Form } from "@prisma/client";
 import { notFound } from "next/navigation";
 import { ReactNode } from "react";
 
@@ -15,7 +12,13 @@ export default async function FormActionPage(props: Props) {
   const action = params.action;
   const formId = params.form;
 
-  const form = await getFormById(formId);
+  const form = await getFormById(formId, {
+    question: {
+      include: {
+        answerOption: true,
+      },
+    },
+  });
 
   if (!form) {
     return notFound();
@@ -27,16 +30,13 @@ export default async function FormActionPage(props: Props) {
         return <FormDeleteAction id={form.id} />;
 
       case "edit":
-        return <div>Edit form</div>;
-      // return <FormEditAction category={form} />;
+        return <FormEditAction form={form as any} />;
       default:
         return null;
     }
   };
 
   return (
-    <main className="flex-1 flex items-center justify-center">
-      {renderAction(action)}
-    </main>
+    <main className="flex-1 flex justify-center">{renderAction(action)}</main>
   );
 }

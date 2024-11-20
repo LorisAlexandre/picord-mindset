@@ -25,7 +25,7 @@ export const FormDeleteAction = ({ id }: { id: string }) => {
   const submitRef = useRef<HTMLButtonElement | null>(null);
 
   return (
-    <div className="flex-1 h-full pt-4 flex flex-col gap-8">
+    <div className="flex-1 max-w-xl h-full pt-4 flex flex-col gap-8">
       <Button variant={"ghost"} className="px-1 py-1 h-fit w-fit" asChild>
         <Link
           prefetch={true}

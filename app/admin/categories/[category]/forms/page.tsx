@@ -20,6 +20,7 @@ import {
   DropdownMenuItem,
 } from "@/components/shadcn/ui";
 import { getFormsByCategory } from "@/lib/server/form";
+import { Form, Question } from "@prisma/client";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 
@@ -29,7 +30,9 @@ interface Props {
 export default async function FormsPage(props: Props) {
   const params = await props.params;
   const category = params.category;
-  const forms = await getFormsByCategory(category, ["question"]);
+  const forms = await getFormsByCategory(category, {
+    question: true,
+  });
 
   return (
     <main className="flex-1 flex pt-4 px-2">
@@ -88,7 +91,8 @@ export default async function FormsPage(props: Props) {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="text-sm text-muted-foreground">
-                  {f.question.length} question(s)
+                  {(f as Form & { question: Question[] }).question.length}{" "}
+                  question(s)
                 </CardContent>
                 {/* <CardFooter>
                   <Button asChild>
