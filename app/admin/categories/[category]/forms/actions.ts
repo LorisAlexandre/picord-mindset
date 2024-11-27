@@ -196,7 +196,7 @@ export async function updateFormAction(
 
   const form = validatedFields.data;
 
-  const [updatedForm, ...result] = await updateForm(form);
+  const [updatedForm, ..._result] = await updateForm(form);
 
   return redirect(
     `/admin/categories/${updatedForm.category.title}/forms/${form.id}`

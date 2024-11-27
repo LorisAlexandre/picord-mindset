@@ -18,7 +18,7 @@ export default async function CategoryPage(props: Props) {
         </div>
 
         <div className="flex-1 flex flex-wrap gap-8">
-          <ContentWidget />
+          <ContentWidget category={category} />
           <FormWidget category={category} />
         </div>
       </div>

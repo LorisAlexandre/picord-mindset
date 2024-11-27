@@ -25,8 +25,8 @@ export default async function AdminLayout({
     <SidebarProvider defaultOpen={defaultOpen}>
       <AppSidebar variant="inset" />
       <SidebarInset>
-        <main className="flex-1 flex flex-col p-2">
-          <SidebarTrigger />
+        <main className="flex-1 flex flex-col p-2 relative">
+          <SidebarTrigger className="sticky top-4" />
           {children}
         </main>
       </SidebarInset>

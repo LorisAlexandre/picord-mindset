@@ -40,7 +40,6 @@ export default async function FormsPage(props: Props) {
         <div className="flex items-center justify-between px-6 pb-2">
           <CardHeader className="p-0">
             <CardTitle>Suivis</CardTitle>
-            {/* <CardDescription></CardDescription> */}
           </CardHeader>
           <CardFooter className="p-0">
             <Dialog>
@@ -57,7 +56,12 @@ export default async function FormsPage(props: Props) {
             forms.map((f) => (
               <Card key={f.id} className="max-w-80 w-full">
                 <CardHeader className="flex-row items-center justify-between gap-4 space-y-0 w-full">
-                  <CardTitle>{f.title}</CardTitle>
+                  <Button variant={"link"} size={"link"} asChild>
+                    <Link href={`/admin/categories/${category}/forms/${f.id}`}>
+                      <CardTitle>{f.title}</CardTitle>
+                    </Link>
+                  </Button>
+
                   <CardDescription>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild className="relative">
@@ -94,16 +98,6 @@ export default async function FormsPage(props: Props) {
                   {(f as Form & { question: Question[] }).question.length}{" "}
                   question(s)
                 </CardContent>
-                {/* <CardFooter>
-                  <Button asChild>
-                    <Link
-                      prefetch={true}
-                      href={`/admin/categories/${category}/forms/${f.id}/edit`}
-                    >
-                      Edit
-                    </Link>
-                  </Button>
-                </CardFooter> */}
               </Card>
             ))
           ) : (

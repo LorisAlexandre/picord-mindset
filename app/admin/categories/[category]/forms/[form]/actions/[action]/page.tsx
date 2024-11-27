@@ -1,6 +1,9 @@
-import { FormDeleteAction, FormEditAction } from "@/components/form";
+import {
+  FormDeleteAction,
+  FormEditAction,
+  FormLinkContentAction,
+} from "@/components/form";
 import { getFormById } from "@/lib/server/form";
-import { Form } from "@prisma/client";
 import { notFound } from "next/navigation";
 import { ReactNode } from "react";
 
@@ -13,11 +16,13 @@ export default async function FormActionPage(props: Props) {
   const formId = params.form;
 
   const form = await getFormById(formId, {
+    content: true,
     question: {
       include: {
         answerOption: true,
       },
     },
+    category: true,
   });
 
   if (!form) {
@@ -28,9 +33,10 @@ export default async function FormActionPage(props: Props) {
     switch (action) {
       case "delete":
         return <FormDeleteAction id={form.id} />;
-
       case "edit":
         return <FormEditAction form={form as any} />;
+      case "link-content":
+        return <FormLinkContentAction form={form as any} />;
       default:
         return null;
     }
