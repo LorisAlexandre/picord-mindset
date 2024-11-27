@@ -1,6 +1,7 @@
 "use client";
 
 import { deleteCategoryAction } from "@/app/admin/categories/actions";
+import { PreviousBtn } from "@/components/previous-btn";
 import { Button, Input, Label } from "@/components/shadcn/ui";
 import { SubmitBtn } from "@/components/submit-btn";
 import { cn } from "@/lib/utils";
@@ -26,16 +27,7 @@ export const CategoryDeleteAction = ({ id }: { id: string }) => {
 
   return (
     <div className="flex-1 h-full pt-4 flex flex-col gap-8">
-      <Button variant={"ghost"} className="px-1 py-1 h-fit w-fit" asChild>
-        <Link
-          prefetch={true}
-          href={`/admin/categories/${category}`}
-          className="flex gap-1"
-        >
-          <ArrowLeft />
-          Retour
-        </Link>
-      </Button>
+      <PreviousBtn previousUrl={`/admin/categories/${category}`} />
 
       <form
         action={async (formData) => {

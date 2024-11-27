@@ -1,6 +1,7 @@
 "use client";
 
 import { editCategoryAction } from "@/app/admin/categories/actions";
+import { PreviousBtn } from "@/components/previous-btn";
 import {
   Button,
   Card,
@@ -34,16 +35,7 @@ export const CategoryEditAction = ({ category }: { category: Category }) => {
 
   return (
     <div className="flex-1 h-full pt-4 flex flex-col gap-8">
-      <Button variant={"ghost"} className="px-1 py-1 h-fit w-fit" asChild>
-        <Link
-          prefetch={true}
-          href={`/admin/categories/${category.title}`}
-          className="flex gap-1"
-        >
-          <ArrowLeft />
-          Retour
-        </Link>
-      </Button>
+      <PreviousBtn previousUrl={`/admin/categories/${category.title}`} />
 
       <form
         action={async (formData) => {
