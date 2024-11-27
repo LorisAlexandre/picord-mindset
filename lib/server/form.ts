@@ -128,3 +128,17 @@ export async function updateForm(form: FormProps) {
 
   return result;
 }
+
+export async function changeFormCategory(formId: string, categoryId: string) {
+  const updatedForm = await prisma.form.update({
+    where: { id: formId },
+    data: {
+      categoryId,
+    },
+    include: {
+      category: true,
+    },
+  });
+
+  return updatedForm;
+}
