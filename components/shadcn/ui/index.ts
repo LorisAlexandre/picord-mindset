@@ -100,3 +100,10 @@ export {
 export { RadioGroup, RadioGroupItem } from "./radio-group";
 export { Checkbox } from "./checkbox";
 export { Textarea } from "./textarea";
+export {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "./accordion";
+export { Badge, badgeVariants, type BadgeProps } from "./badge";
