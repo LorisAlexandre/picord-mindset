@@ -1,13 +1,12 @@
 "use client";
 
 import { deleteFormAction } from "@/app/admin/categories/[category]/forms/actions";
-import { Button, Input, Label } from "@/components/shadcn/ui";
+import { Input, Label } from "@/components/shadcn/ui";
 import { SubmitBtn } from "@/components/submit-btn";
 import { cn } from "@/lib/utils";
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useActionState, useRef } from "react";
+import { PreviousBtn } from "@/components/previous-btn";
 
 const initialState: {
   fieldErrors?: {
@@ -26,16 +25,7 @@ export const FormDeleteAction = ({ id }: { id: string }) => {
 
   return (
     <div className="flex-1 max-w-xl h-full pt-4 flex flex-col gap-8">
-      <Button variant={"ghost"} className="px-1 py-1 h-fit w-fit" asChild>
-        <Link
-          prefetch={true}
-          href={`/admin/categories/${category}/forms/${id}`}
-          className="flex gap-1"
-        >
-          <ArrowLeft />
-          Retour
-        </Link>
-      </Button>
+      <PreviousBtn previousUrl={`/admin/categories/${category}/forms/${id}`} />
 
       <form
         action={async (formData) => {

@@ -221,7 +221,7 @@ export const FormEditAction = ({ form }: { form: FormProps }) => {
   return (
     <Card
       variant={"ghost"}
-      className="w-full max-w-xl max-h-[90vh] overflow-y-auto"
+      className="w-full max-w-xl overflow-y-auto relative"
     >
       <form
         action={async () => {
