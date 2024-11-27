@@ -4,7 +4,8 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
 }
 
 enum UserRole {
@@ -164,7 +165,7 @@ model Content {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   properties ContentProperties
-  tag        String?
+  tag        String[]
 
   categoryId String   @db.ObjectId
   category   Category @relation(references: [id], fields: [categoryId], onDelete: Cascade)
