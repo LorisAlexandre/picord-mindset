@@ -6,18 +6,13 @@ import { prisma } from "./db";
 import { getCurrentSession } from "./session";
 import { cache } from "react";
 
-export const getCategories = cache(
-  async (include?: (keyof Prisma.CategoryInclude)[]) => {
-    const cleanInclude: { [k: string]: boolean } = {};
-    (include ?? [])?.map((k) => (cleanInclude[k] = true));
+export const getCategories = cache(async (include?: Prisma.CategoryInclude) => {
+  const categories = await prisma.category.findMany({
+    include,
+  });
 
-    const categories = await prisma.category.findMany({
-      include: cleanInclude,
-    });
-
-    return categories;
-  }
-);
+  return categories;
+});
 
 export const getCategoryById = cache(
   async (id: string): Promise<Category | null> => {

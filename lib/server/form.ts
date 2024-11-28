@@ -1,11 +1,13 @@
 "server-only";
 
-import { AnswerOption, Form, Prisma, Question } from "@prisma/client";
+import { AnswerOption, Category, Form, Prisma, Question } from "@prisma/client";
 import { cache } from "react";
 import { prisma } from "./db";
 import { getCurrentSession } from "./session";
 import { redirect } from "next/navigation";
 import { ObjectId } from "mongodb";
+import { change$oidToId } from "../functions";
+import FormsPage from "@/app/admin/forms/page";
 
 export const getFormsByCategory = cache(
   async (categoryTitle: string, include?: Prisma.FormInclude) => {
@@ -15,6 +17,100 @@ export const getFormsByCategory = cache(
     });
 
     return forms;
+  }
+);
+
+type FormWithInclude<TInclude extends (keyof Prisma.FormInclude)[]> = Form & {
+  [P in TInclude[number]]: Prisma.FormGetPayload<{
+    include: { [K in P]: true };
+  }>[];
+};
+export const getLatestFormsByCategory = cache(
+  async <TInclude extends (keyof Prisma.FormInclude)[]>({
+    category,
+    include,
+    start = 0,
+    step = 5,
+  }: {
+    category?: string;
+    include: TInclude;
+    start?: number;
+    step?: number;
+  }): Promise<(Category & { form: FormWithInclude<TInclude>[] })[]> => {
+    const pipeline: { [key: string]: any }[] = [];
+
+    pipeline.push({
+      $lookup: {
+        from: "Form",
+        localField: "_id",
+        foreignField: "categoryId",
+        as: "form",
+        pipeline: [
+          {
+            $sort: { "form.createdAt": -1 },
+          },
+          {
+            $limit: step ?? 0,
+          },
+          {
+            $skip: start,
+          },
+        ],
+      },
+    });
+
+    if (category) {
+      pipeline.push({
+        $match: {
+          title: category,
+        },
+      });
+    }
+
+    (include ?? []).map((inc) => {
+      pipeline.push(
+        {
+          $lookup: {
+            from: inc.charAt(0).toUpperCase() + inc.slice(1),
+            localField: "form._id",
+            foreignField: "formId",
+            as: `${inc}s`,
+          },
+        },
+        {
+          $addFields: {
+            form: {
+              $map: {
+                input: "$form",
+                as: "form",
+                in: {
+                  $mergeObjects: [
+                    "$$form",
+                    {
+                      [inc]: {
+                        $filter: {
+                          input: `$${inc}s`,
+                          as: inc,
+                          cond: { $eq: [`$$${inc}.formId`, "$$form._id"] },
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        }
+      );
+    });
+
+    const result = (await prisma.category.aggregateRaw({
+      pipeline,
+    })) as any;
+
+    const cleanResult = result.map(change$oidToId);
+
+    return cleanResult;
   }
 );
 

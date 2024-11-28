@@ -2,11 +2,9 @@
 
 import { deleteCategoryAction } from "@/app/admin/categories/actions";
 import { PreviousBtn } from "@/components/previous-btn";
-import { Button, Input, Label } from "@/components/shadcn/ui";
+import { Input, Label } from "@/components/shadcn/ui";
 import { SubmitBtn } from "@/components/submit-btn";
 import { cn } from "@/lib/utils";
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useActionState, useRef } from "react";
 

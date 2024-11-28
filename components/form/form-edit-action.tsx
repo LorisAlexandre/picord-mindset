@@ -1,6 +1,6 @@
 "use client";
 
-import { updateFormAction } from "@/app/admin/categories/[category]/forms/actions";
+import { updateFormAction } from "@/app/admin/forms/actions";
 import {
   Button,
   Card,

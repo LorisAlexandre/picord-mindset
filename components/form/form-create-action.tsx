@@ -1,6 +1,6 @@
 "use client";
 
-import { createFormAction } from "@/app/admin/categories/[category]/forms/actions";
+import { createFormAction } from "@/app/admin/forms/actions";
 import {
   DialogContent,
   DialogDescription,
@@ -9,11 +9,17 @@ import {
   DialogTitle,
   Input,
   Label,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  Skeleton,
 } from "@/components/shadcn/ui";
 import { SubmitBtn } from "@/components/submit-btn";
 import { cn } from "@/lib/utils";
-import { useParams } from "next/navigation";
-import { useActionState, useRef } from "react";
+import { Suspense, useActionState, useRef } from "react";
+import { Category } from "@prisma/client";
 
 const initialState: {
   message: string;
@@ -23,11 +29,13 @@ const initialState: {
 } = {
   message: "",
 };
-export const FormCreateAction = () => {
+export const FormCreateAction = ({
+  categories,
+}: {
+  categories: Category[];
+}) => {
   const [state, action] = useActionState(createFormAction, initialState);
   const submitBtnRef = useRef<HTMLButtonElement | null>(null);
-  const params = useParams();
-  const category = params.category;
 
   return (
     <DialogContent>
@@ -40,11 +48,37 @@ export const FormCreateAction = () => {
       </DialogHeader>
       <form
         action={async (formData) => {
-          formData.set("category", category as string);
           await action(formData);
         }}
         className="flex flex-col gap-2"
       >
+        <div>
+          <Label htmlFor="category">Catégorie</Label>
+          <Select name="category">
+            <SelectTrigger
+              className={cn(
+                !!state.fieldErrors &&
+                  !!state.fieldErrors["category"] &&
+                  "invalid:ring-1 invalid:ring-red-500"
+              )}
+            >
+              <SelectValue placeholder="Theme" />
+            </SelectTrigger>
+            <SelectContent>
+              {categories.map((cat) => (
+                <SelectItem key={`select-category-${cat.id}`} value={cat.title}>
+                  {cat.title}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {!!state.fieldErrors && !!state.fieldErrors["category"] && (
+            <p className="text-sm text-red-500">
+              * {state.fieldErrors["category"]}
+            </p>
+          )}
+        </div>
+
         <div>
           <Label htmlFor="title">Titre du formulaire</Label>
           <Input

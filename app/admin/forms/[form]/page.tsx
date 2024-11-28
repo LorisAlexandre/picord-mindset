@@ -26,7 +26,6 @@ type FormProps = Form & { question: Question[] } & { content: Content[] };
 export default async function FormPage(props: Props) {
   const params = await props.params;
   const formId = params.form;
-  const category = params.category;
 
   const form = (await getFormById(formId, {
     question: {
@@ -52,23 +51,17 @@ export default async function FormPage(props: Props) {
             </CardHeader>
             <CardFooter className="p-0 gap-2">
               <Button asChild>
-                <Link
-                  href={`/admin/categories/${category}/forms/${form.id}/actions/link-content`}
-                >
+                <Link href={`/admin/forms/${form.id}/actions/link-content`}>
                   <LinkIcon /> Associer contenu(s)
                 </Link>
               </Button>
               <Button variant={"secondary"} asChild>
-                <Link
-                  href={`/admin/categories/${category}/forms/${form.id}/actions/edit`}
-                >
+                <Link href={`/admin/forms/${form.id}/actions/edit`}>
                   <SquarePen /> Modifier
                 </Link>
               </Button>
               <Button variant={"destructive"} asChild>
-                <Link
-                  href={`/admin/categories/${category}/forms/${form.id}/actions/delete`}
-                >
+                <Link href={`/admin/forms/${form.id}/actions/delete`}>
                   <Trash2 /> Supprimer
                 </Link>
               </Button>
@@ -88,9 +81,7 @@ export default async function FormPage(props: Props) {
               </h2>
               <div>
                 <Button variant={"secondary"} asChild>
-                  <Link
-                    href={`/admin/categories/${category}/forms/${form.id}/actions/edit`}
-                  >
+                  <Link href={`/admin/forms/${form.id}/actions/edit`}>
                     <Plus /> Ajouter une question
                   </Link>
                 </Button>
@@ -123,9 +114,7 @@ export default async function FormPage(props: Props) {
                 </span>
               </h2>
               <Button variant={"secondary"} asChild>
-                <Link
-                  href={`/admin/categories/${category}/forms/${form.id}/actions/link-content`}
-                >
+                <Link href={`/admin/forms/${form.id}/actions/link-content`}>
                   <LinkIcon /> Associer contenu(s)
                 </Link>
               </Button>

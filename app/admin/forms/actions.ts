@@ -60,7 +60,7 @@ export async function createFormAction(
 
   const newForm = await createForm(title, category.id);
 
-  return redirect(`/admin/categories/${category.title}/forms/${newForm.id}`);
+  return redirect(`/admin/forms/${newForm.id}`);
 }
 
 const deleteFormSchema = z.object({
@@ -72,10 +72,6 @@ const deleteFormSchema = z.object({
     .string({ message: "Le champ doit être renseigné" })
     .min(1, "Le champ est obligatoire")
     .max(64, "Le champ est trop long"),
-  category: z
-    .string({ message: "Le champ doit être renseigné" })
-    .min(1, "Le champ est obligatoire")
-    .max(64, "Le champ est trop long"),
 });
 export async function deleteFormAction(
   _prevState: FormState,
@@ -84,7 +80,6 @@ export async function deleteFormAction(
   const validatedFields = deleteFormSchema.safeParse({
     formId: formData.get("formId"),
     id: formData.get("id"),
-    category: formData.get("category"),
   });
 
   if (!validatedFields.success) {
@@ -97,8 +92,6 @@ export async function deleteFormAction(
           switch (e) {
             case "formId":
               return "identifiant";
-            case "category":
-              return "catégorie";
             default:
               return e;
           }
@@ -107,7 +100,7 @@ export async function deleteFormAction(
     };
   }
 
-  const { formId, id, category } = validatedFields.data;
+  const { formId, id } = validatedFields.data;
 
   const form = await getFormById(id);
 
@@ -119,7 +112,7 @@ export async function deleteFormAction(
 
   await deleteForm(id);
 
-  return redirect(`/admin/categories/${category}/forms`);
+  return redirect(`/admin/forms`);
 }
 
 const answerOptionSchema = z.object({
@@ -183,8 +176,6 @@ export async function updateFormAction(
         e.message,
       ];
     });
-
-    console.log(fieldErrors);
 
     return {
       fieldErrors,

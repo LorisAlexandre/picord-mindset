@@ -1,11 +1,10 @@
 "use client";
 
-import { deleteFormAction } from "@/app/admin/categories/[category]/forms/actions";
+import { deleteFormAction } from "@/app/admin/forms/actions";
 import { Input, Label } from "@/components/shadcn/ui";
 import { SubmitBtn } from "@/components/submit-btn";
 import { cn } from "@/lib/utils";
-import { useParams } from "next/navigation";
-import { useActionState, useRef } from "react";
+import { useActionState, useRef, useState } from "react";
 import { PreviousBtn } from "@/components/previous-btn";
 
 const initialState: {
@@ -17,20 +16,16 @@ const initialState: {
   message: "",
 };
 export const FormDeleteAction = ({ id }: { id: string }) => {
-  const params = useParams();
-  const category = params.category;
-
   const [state, action] = useActionState(deleteFormAction, initialState);
   const submitRef = useRef<HTMLButtonElement | null>(null);
 
   return (
     <div className="flex-1 max-w-xl h-full pt-4 flex flex-col gap-8">
-      <PreviousBtn previousUrl={`/admin/categories/${category}/forms/${id}`} />
+      <PreviousBtn previousUrl={`/admin/forms/${id}`} />
 
       <form
         action={async (formData) => {
           formData.set("id", id);
-          formData.set("category", category as string);
           await action(formData);
         }}
         className="flex flex-col gap-4 max-w-md"
