@@ -7,13 +7,21 @@ import { getCurrentSession } from "./session";
 import { redirect } from "next/navigation";
 import { ObjectId } from "mongodb";
 import { change$oidToId } from "../functions";
-import FormsPage from "@/app/admin/forms/page";
 
 export const getFormsByCategory = cache(
-  async (categoryTitle: string, include?: Prisma.FormInclude) => {
+  async (
+    categoryTitle: string,
+    {
+      include,
+      skip = 0,
+      take = 5,
+    }: { include?: Prisma.FormInclude; skip?: number; take?: number }
+  ) => {
     const forms = await prisma.form.findMany({
       where: { category: { title: categoryTitle } },
       include,
+      skip,
+      take,
     });
 
     return forms;

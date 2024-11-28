@@ -18,7 +18,10 @@ const initialState: {
 };
 export const CategoryDeleteAction = ({ id }: { id: string }) => {
   const params = useParams();
-  const category = params.category;
+  const category = decodeURIComponent(params.category as string).replaceAll(
+    "Ã©",
+    "é"
+  );
 
   const [state, action] = useActionState(deleteCategoryAction, initialState);
   const submitRef = useRef<HTMLButtonElement | null>(null);

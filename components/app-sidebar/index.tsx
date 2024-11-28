@@ -1,4 +1,5 @@
 import {
+  Button,
   Dialog,
   DialogTrigger,
   Sidebar,
@@ -16,7 +17,7 @@ import {
   CategoryGroup,
   CategoryCreateAction,
 } from "./category";
-import { Plus } from "lucide-react";
+import { ChevronRight, Plus } from "lucide-react";
 import Link from "next/link";
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
@@ -30,7 +31,16 @@ export const AppSidebar = ({ ...props }: Props) => {
       <SidebarContent>
         <Suspense fallback={<CategoryGroupSkeleton />}>
           <SidebarGroup>
-            <SidebarGroupLabel>Catégories</SidebarGroupLabel>
+            <SidebarGroupLabel>
+              <Button
+                className="text-xs font-medium text-sidebar-foreground/70"
+                variant={"link"}
+                size={"link"}
+                asChild
+              >
+                <Link href={"/admin/categories"}>Catégories</Link>
+              </Button>
+            </SidebarGroupLabel>
             <Dialog>
               <DialogTrigger asChild>
                 <SidebarGroupAction title="Add Project">
@@ -42,30 +52,28 @@ export const AppSidebar = ({ ...props }: Props) => {
             <CategoryGroup />
           </SidebarGroup>
           <SidebarGroup>
-            <SidebarGroupLabel>Formulaires</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                <SidebarMenuButton asChild>
-                  <Link prefetch={true} href={`/admin/forms`}>
-                    {/* <item.icon /> */}
-                    <span>Formulaires</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenu>
-            </SidebarGroupContent>
+            <SidebarGroupLabel>
+              <Button
+                className="text-xs font-medium text-sidebar-foreground/70"
+                variant={"link"}
+                size={"link"}
+                asChild
+              >
+                <Link href={"/admin/forms"}>Formulaires</Link>
+              </Button>
+            </SidebarGroupLabel>
           </SidebarGroup>
           <SidebarGroup>
-            <SidebarGroupLabel>Contenu</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                <SidebarMenuButton asChild>
-                  <Link prefetch={true} href={`/admin/content`}>
-                    {/* <item.icon /> */}
-                    <span>Contenu</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenu>
-            </SidebarGroupContent>
+            <SidebarGroupLabel>
+              <Button
+                className="text-xs font-medium text-sidebar-foreground/70"
+                variant={"link"}
+                size={"link"}
+                asChild
+              >
+                <Link href={"/admin/content"}>Contenu</Link>
+              </Button>
+            </SidebarGroupLabel>
           </SidebarGroup>
         </Suspense>
         {/* <SidebarSeparator /> */}

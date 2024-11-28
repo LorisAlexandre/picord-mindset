@@ -12,7 +12,7 @@ interface Props {
 export default async function CategoryActionPage(props: Props) {
   const params = await props.params;
   const action = params.action;
-  const title = params.category;
+  const title = decodeURIComponent(params.category).replaceAll("Ã©", "é");
 
   const category = await getCategoryByTitle(title);
 

@@ -49,7 +49,7 @@ export async function createCategoryAction(
   const newCategory = await createCategory(title);
   revalidatePath("/admin");
 
-  return redirect(`/admin/${newCategory.title}`);
+  return redirect(`/admin/categories/${newCategory.title}`);
 }
 
 const deleteCategorySchema = z.object({
@@ -100,7 +100,7 @@ export async function deleteCategoryAction(
 
   await deleteCategory(id);
 
-  return redirect("/admin");
+  return redirect("/admin/categories");
 }
 
 const editCategorySchema = z.object({
@@ -149,7 +149,7 @@ export async function editCategoryAction(
   });
 
   revalidatePath("/admin");
-  return redirect(`/admin/${data.title}/edit`);
+  return redirect(`/admin/categories/${data.title}/actions/edit`);
 }
 
 interface FormState {
