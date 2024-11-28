@@ -28,7 +28,6 @@ export default async function FormsPage(props: Props) {
   const searchParams = await props.searchParams;
   const category = searchParams.category as string;
   const start = searchParams.start as string;
-  const step = searchParams.step as string;
 
   const categories = await getLatestFormsByCategory({
     category,
@@ -70,7 +69,8 @@ export default async function FormsPage(props: Props) {
                   <CardTitle>
                     <Button variant={"link"} size={"link"} asChild>
                       <Link
-                        href={`/admin/forms?category=${cat.title}&start=0&step=5`}
+                        prefetch={true}
+                        href={`/admin/forms?category=${cat.title}&start=0`}
                       >
                         {cat.title} <ChevronRight />
                       </Link>
@@ -98,7 +98,10 @@ export default async function FormsPage(props: Props) {
                     <Card key={`form-${form.id}`} className="w-full max-w-80">
                       <CardHeader className="flex-row items-center justify-between gap-4 space-y-0 w-full pb-0">
                         <Button variant={"link"} size={"link"} asChild>
-                          <Link href={`/admin/forms/${form.id}`}>
+                          <Link
+                            prefetch={true}
+                            href={`/admin/forms/${form.id}`}
+                          >
                             <CardTitle className="flex items-center justify-center gap-1">
                               {form.title} <ChevronRight />
                             </CardTitle>
@@ -143,21 +146,35 @@ export default async function FormsPage(props: Props) {
                     </Card>
                   ))}
                 </CardContent>
-                <CardFooter>
-                  {Number(start) >= 0 && Number(step) ? (
-                    <Button variant={"secondary"} asChild>
-                      <Link
-                        href={`/admin/forms?category=${cat.title}&start=${
-                          Number(start) + Number(step)
-                        }&step=${Number(step)}`}
-                      >
-                        Suivant
-                      </Link>
-                    </Button>
+                <CardFooter className="gap-4">
+                  {Number(start) >= 0 ? (
+                    <>
+                      <Button variant={"secondary"} asChild>
+                        <Link
+                          prefetch={true}
+                          href={`/admin/forms?category=${cat.title}&start=${
+                            Number(start) - 5
+                          }`}
+                        >
+                          Précédent
+                        </Link>
+                      </Button>
+                      <Button variant={"secondary"} asChild>
+                        <Link
+                          prefetch={true}
+                          href={`/admin/forms?category=${cat.title}&start=${
+                            Number(start) + 5
+                          }`}
+                        >
+                          Suivant
+                        </Link>
+                      </Button>
+                    </>
                   ) : (
                     <Button variant={"secondary"} asChild>
                       <Link
-                        href={`/admin/forms?category=${cat.title}&start=0&step=5`}
+                        prefetch={true}
+                        href={`/admin/forms?category=${cat.title}&start=0`}
                       >
                         <Ellipsis /> Voir tous les formulaires
                       </Link>
